@@ -1,0 +1,238 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.4.196 Build 20170411
+
+Compiler options: -qopt-report=5
+
+    Report from: Interprocedural optimizations [ipo]
+
+  WHOLE PROGRAM (SAFE) [EITHER METHOD]: false
+  WHOLE PROGRAM (SEEN) [TABLE METHOD]: false
+  WHOLE PROGRAM (READ) [OBJECT READER METHOD]: false
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+In the inlining report below:
+   "sz" refers to the "size" of the routine. The smaller a routine's size,
+      the more likely it is to be inlined.
+   "isz" refers to the "inlined size" of the routine. This is the amount
+      the calling routine will grow if the called routine is inlined into it.
+      The compiler generally limits the amount a routine can grow by having
+      routines inlined into it.
+
+Begin optimization report for: main()
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (main()) [1/1=100.0%] matrix.cc(5,11)
+  -> EXTERN: (7,26) malloc(size_t)
+  -> EXTERN: (8,26) malloc(size_t)
+  -> EXTERN: (9,26) malloc(size_t)
+  -> EXTERN: (11,3) printf(const char *, ...)
+  -> EXTERN: (25,17) omp_get_wtime()
+  -> EXTERN: (35,10) omp_get_wtime()
+  -> EXTERN: (37,3) printf(const char *, ...)
+  -> EXTERN: (44,5) printf(const char *, ...)
+  -> EXTERN: (46,5) printf(const char *, ...)
+  -> EXTERN: (48,3) printf(const char *, ...)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at matrix.cc(14,3)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at matrix.cc(15,5)
+   <Peeled loop for vectorization>
+      remark #25015: Estimate of max trip count of loop=1
+   LOOP END
+
+   LOOP BEGIN at matrix.cc(15,5)
+      remark #15388: vectorization support: reference A[i*3000+j] has aligned access   [ matrix.cc(16,7) ]
+      remark #15388: vectorization support: reference B[i*3000+j] has aligned access   [ matrix.cc(17,7) ]
+      remark #15305: vectorization support: vector length 2
+      remark #15399: vectorization support: unroll factor set to 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.109
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15442: entire loop may be executed in remainder
+      remark #15449: unmasked aligned unit stride stores: 2 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 62 
+      remark #15477: vector cost: 19.500 
+      remark #15478: estimated potential speedup: 3.160 
+      remark #15486: divides: 1 
+      remark #15487: type converts: 1 
+      remark #15488: --- end vector cost summary ---
+      remark #25015: Estimate of max trip count of loop=375
+   LOOP END
+
+   LOOP BEGIN at matrix.cc(15,5)
+   <Alternate Alignment Vectorized Loop>
+      remark #25015: Estimate of max trip count of loop=375
+   LOOP END
+
+   LOOP BEGIN at matrix.cc(15,5)
+   <Remainder loop for vectorization>
+      remark #15389: vectorization support: reference A[i*3000+j] has unaligned access   [ matrix.cc(16,7) ]
+      remark #15388: vectorization support: reference B[i*3000+j] has aligned access   [ matrix.cc(17,7) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 2
+      remark #15309: vectorization support: normalized vectorization overhead 0.356
+      remark #15301: REMAINDER LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at matrix.cc(15,5)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at matrix.cc(22,7)
+   remark #15389: vectorization support: reference C[$i1] has unaligned access
+   remark #15381: vectorization support: unaligned access used inside loop body
+   remark #15305: vectorization support: vector length 2
+   remark #15309: vectorization support: normalized vectorization overhead 0.600
+   remark #15300: LOOP WAS VECTORIZED
+   remark #15451: unmasked unaligned unit stride stores: 1 
+   remark #15475: --- begin vector cost summary ---
+   remark #15476: scalar cost: 4 
+   remark #15477: vector cost: 2.500 
+   remark #15478: estimated potential speedup: 1.590 
+   remark #15488: --- end vector cost summary ---
+   remark #25015: Estimate of max trip count of loop=4500000
+LOOP END
+
+LOOP BEGIN at matrix.cc(27,3)
+   remark #25444: Loopnest Interchanged: ( 1 2 3 ) --> ( 1 3 2 )
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at matrix.cc(30,7)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at matrix.cc(28,5)
+      <Peeled loop for vectorization>
+         remark #25015: Estimate of max trip count of loop=1
+      LOOP END
+
+      LOOP BEGIN at matrix.cc(28,5)
+         remark #15388: vectorization support: reference C[i*3000+j] has aligned access   [ matrix.cc(31,2) ]
+         remark #15388: vectorization support: reference C[i*3000+j] has aligned access   [ matrix.cc(31,2) ]
+         remark #15388: vectorization support: reference B[k*3000+j] has aligned access   [ matrix.cc(31,23) ]
+         remark #15305: vectorization support: vector length 2
+         remark #15399: vectorization support: unroll factor set to 4
+         remark #15309: vectorization support: normalized vectorization overhead 0.500
+         remark #15301: PERMUTED LOOP WAS VECTORIZED
+         remark #15442: entire loop may be executed in remainder
+         remark #15448: unmasked aligned unit stride loads: 2 
+         remark #15449: unmasked aligned unit stride stores: 1 
+         remark #15475: --- begin vector cost summary ---
+         remark #15476: scalar cost: 11 
+         remark #15477: vector cost: 4.000 
+         remark #15478: estimated potential speedup: 2.730 
+         remark #15488: --- end vector cost summary ---
+         remark #25015: Estimate of max trip count of loop=375
+      LOOP END
+
+      LOOP BEGIN at matrix.cc(28,5)
+      <Alternate Alignment Vectorized Loop>
+         remark #25015: Estimate of max trip count of loop=375
+      LOOP END
+
+      LOOP BEGIN at matrix.cc(28,5)
+      <Remainder loop for vectorization>
+         remark #15388: vectorization support: reference C[i*3000+j] has aligned access   [ matrix.cc(31,2) ]
+         remark #15388: vectorization support: reference C[i*3000+j] has aligned access   [ matrix.cc(31,2) ]
+         remark #15389: vectorization support: reference B[k*3000+j] has unaligned access   [ matrix.cc(31,23) ]
+         remark #15381: vectorization support: unaligned access used inside loop body
+         remark #15305: vectorization support: vector length 2
+         remark #15309: vectorization support: normalized vectorization overhead 1.000
+         remark #15301: REMAINDER LOOP WAS VECTORIZED
+      LOOP END
+
+      LOOP BEGIN at matrix.cc(28,5)
+      <Remainder loop for vectorization>
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at matrix.cc(39,3)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at matrix.cc(40,5)
+   <Peeled loop for vectorization>
+      remark #25015: Estimate of max trip count of loop=1
+   LOOP END
+
+   LOOP BEGIN at matrix.cc(40,5)
+      remark #15388: vectorization support: reference C[i*3000+j] has aligned access   [ matrix.cc(41,16) ]
+      remark #15388: vectorization support: reference C[i*3000+j] has aligned access   [ matrix.cc(41,51) ]
+      remark #15305: vectorization support: vector length 2
+      remark #15399: vectorization support: unroll factor set to 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.047
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15442: entire loop may be executed in remainder
+      remark #15448: unmasked aligned unit stride loads: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 71 
+      remark #15477: vector cost: 43.000 
+      remark #15478: estimated potential speedup: 1.640 
+      remark #15486: divides: 2 
+      remark #15487: type converts: 2 
+      remark #15488: --- end vector cost summary ---
+      remark #25015: Estimate of max trip count of loop=375
+   LOOP END
+
+   LOOP BEGIN at matrix.cc(40,5)
+   <Remainder loop for vectorization>
+      remark #15388: vectorization support: reference C[i*3000+j] has aligned access   [ matrix.cc(41,16) ]
+      remark #15388: vectorization support: reference C[i*3000+j] has aligned access   [ matrix.cc(41,51) ]
+      remark #15305: vectorization support: vector length 2
+      remark #15309: vectorization support: normalized vectorization overhead 0.389
+      remark #15301: REMAINDER LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at matrix.cc(40,5)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+matrix.cc(5,11):remark #34051: REGISTER ALLOCATION : [main] matrix.cc:5
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   30[ rax rdx rcx rbx rsi rdi r8-r15 zmm0-zmm15]
+        
+    Routine temporaries
+        Total         :     325
+            Global    :     104
+            Local     :     221
+        Regenerable   :      26
+        Spilled       :      16
+        
+    Routine stack
+        Variables     :       4 bytes*
+            Reads     :       2 [2.00e+00 ~ 0.0%]
+            Writes    :       2 [2.00e+00 ~ 0.0%]
+        Spills        :     112 bytes*
+            Reads     :      14 [3.60e+07 ~ 0.0%]
+            Writes    :      16 [1.60e+04 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
