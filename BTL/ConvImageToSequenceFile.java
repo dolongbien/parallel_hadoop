@@ -76,7 +76,7 @@ public class ConvImageToSequenceFile {
             
             job.setMapperClass(ConvImageToSequenceFileMapper.class);
             job.setOutputKeyClass(Text.class);
-            job.setOutputValueClass(ByteWritable.class);
+            job.setOutputValueClass(BytesWritable.class);
             
             job.setInputFormatClass(TextInputFormat.class);
             job.setOutputFormatClass(SequenceFileOutputFormat.class);

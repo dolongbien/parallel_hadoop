@@ -79,7 +79,7 @@ public class ImageDuplicateFinder {
             for(Text tempPath : values)
             {
                 imagePath = tempPath;
-                return;
+                break;
             }
             context.write(new Text(imagePath) , key);
         }   
