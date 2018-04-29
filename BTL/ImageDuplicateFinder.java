@@ -1,5 +1,5 @@
+package Skein;
 import java.io.IOException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.hadoop.conf.Configuration;
@@ -31,21 +31,20 @@ public class ImageDuplicateFinder {
             
            
             byte tempImageData[] = value.getBytes();
-            String md5Str = null;
+            String skeinStr = null;
             try {
              
-                md5Str = convertToStr(tempImageData);
+                skeinStr = convertToStr(tempImageData);
             } catch (NoSuchAlgorithmException e) {
                 
                 e.printStackTrace();
-                context.setStatus("Internal Error Can't find the algorithm for the specified " +
-                        "digest algorithm MD5 ");
+                context.setStatus("ERROR");
                 
                 
                 return ;
             }
            
-            context.write(new Text(md5Str),key);
+            context.write(new Text(skeinStr),key);
             
             
         }
@@ -53,18 +52,13 @@ public class ImageDuplicateFinder {
         
         public String convertToStr(byte[] passImageData) throws NoSuchAlgorithmException{
             
-            
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            
-                  
-            md.update(passImageData);
-          
-            byte[] tempHash =md.digest();
+            byte[] result = new byte[512];
+            Skein512Small.hash(passImageData, result);
             
             String hexString = new String();
            
-                for(int i =0; i<tempHash.length; i++){
-                    hexString += Integer.toString( (tempHash[i] & 0xff) + 0x100, 16 ).substring(1);
+                for(int i =0; i<result.length; i++){
+                    hexString += Integer.toString( (result[i] & 0xff) + 0x100, 16 ).substring(1);
                 }
             return hexString  ;
         }
@@ -79,12 +73,10 @@ public class ImageDuplicateFinder {
             for(Text tempPath : values)
             {
                 imagePath = tempPath;
-               // return;
-               break;
+                break;
             }
             context.write(new Text(imagePath) , key);
         }   
-    
     }
     
     public static void main(String[] args) throws Exception  {
@@ -103,12 +95,9 @@ public class ImageDuplicateFinder {
             job.setMapperClass(ImageDuplicateFinderMapper.class);
             job.setReducerClass(ImageDuplicateFinderReducer.class);
             
-            
             job.setOutputKeyClass(Text.class);
             job.setOutputValueClass(Text.class);
             
-            
-   
             job.setInputFormatClass(SequenceFileInputFormat.class);
             job.setOutputFormatClass(TextOutputFormat.class);
             
@@ -116,7 +105,7 @@ public class ImageDuplicateFinder {
             FileInputFormat.addInputPath(job, new Path(args[0]));
             FileOutputFormat.setOutputPath(job, new Path(args[1]));
 	    
-	    System.exit(job.waitForCompletion(true) ? 0 : 1);                    
+	        System.exit(job.waitForCompletion(true) ? 0 : 1);                    
  
         }
 
